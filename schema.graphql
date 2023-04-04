@@ -1,0 +1,46 @@
+type Account @entity {
+  id: ID! # account address
+  address: Bytes!
+  totalBids: BigInt
+  totalAuctions: BigInt
+  totalAuctionsWon: BigInt
+}
+
+type Nft @entity {
+  id: ID! # token address + token id
+  totalAuctions: BigInt
+  totalSettledAuctions: BigInt
+  auctions: [Auction!] @derivedFrom(field: "nft")
+}
+
+type Auction @entity {
+  id: ID! # Nft.id + Nft.totalAuctions
+  contractAddress: Nft!
+  auctionCreator: Account!
+  currencyAddress: Bytes!
+  minimumBid: BigInt!
+  seller: Account! # auction creator is always the seller, so do I need it?
+  startedAt: BigInt
+  startedAuction: Boolean # get rid if startedAt default value is null
+  endedAt: BigInt
+  bidder: Account
+  closingAmount: BigInt #closing amount
+  bids: [Bid!] @derivedFrom(field: "auction")
+  totalBids: BigInt # can I get bids.length?
+  cancelled: Boolean
+}
+
+type Bid @entity {
+  id: ID! # Auction.id + Auction.totalBids
+  bidder: Account!
+  auction: Auction!
+  amount: BigInt!
+}
+
+type Day @entity {
+  id: ID!
+  date: String!
+  totalCreatedAuctions: BigInt!
+  totalSettledAuctions: BigInt!
+  totalBids: BigInt!
+}

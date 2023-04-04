@@ -1,0 +1,41 @@
+specVersion: 0.0.4
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: SuperRareBazaar
+    network: mainnet
+    source:
+      address: "0x6D7c44773C52D396F43c2D511B81aa168E9a7a42"
+      abi: SuperRareBazaar
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - Account
+        - Auction
+        - Bid
+      abis:
+        - name: SuperRareBazaar
+          file: ./abis/SuperRareBazaar.json
+      eventHandlers:
+        - event: AcceptOffer(indexed address,indexed address,indexed address,address,uint256,uint256,address[],uint8[])
+          handler: handleAcceptOffer
+        - event: AuctionBid(indexed address,indexed address,indexed uint256,address,uint256,bool,uint256,address)
+          handler: handleAuctionBid
+        - event: AuctionSettled(indexed address,indexed address,address,indexed uint256,address,uint256)
+          handler: handleAuctionSettled
+        - event: CancelAuction(indexed address,indexed uint256,indexed address)
+          handler: handleCancelAuction
+        - event: CancelOffer(indexed address,indexed address,indexed address,uint256,uint256)
+          handler: handleCancelOffer
+        - event: NewAuction(indexed address,indexed uint256,indexed address,address,uint256,uint256,uint256)
+          handler: handleNewAuction
+        - event: OfferPlaced(indexed address,indexed address,indexed address,uint256,uint256,bool)
+          handler: handleOfferPlaced
+        - event: SetSalePrice(indexed address,indexed address,address,uint256,uint256,address[],uint8[])
+          handler: handleSetSalePrice
+        - event: Sold(indexed address,indexed address,indexed address,address,uint256,uint256)
+          handler: handleSold
+      file: ./src/super-rare-bazaar.ts
